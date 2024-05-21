@@ -1,24 +1,51 @@
-use sdl2::event::Event;
-use crate::winsdl::Winsdl;
+use bevy::{
+    prelude::*,
+    sprite::{MaterialMesh2dBundle, Mesh2dHandle},
+    window::*,
+    core::FrameCount,
+};
 
-mod winsdl;
+mod plugins;
+
+use plugins::{
+    node::NodePlugin,
+    camera::CameraPlugin,
+};
 
 fn main() {
-    let mut winsdl = Winsdl::new(800, 600).unwrap();
+    App::new()
+        .add_plugins(
+            DefaultPlugins
+                .set(ImagePlugin::default_nearest())
+                .set(WindowPlugin {
+                    primary_window: Some(Window {
+                        title: "Lights Out".into(),
+                        resolution: (800.0, 600.0).into(),
+                        window_theme: Some(WindowTheme::Dark),
+                        present_mode: PresentMode::AutoVsync,
+                        visible: false,
+                        ..default()
+                    }),
+                    ..default()
+                })
+                .build(),
+        )
+        .add_systems(
+            Update,
+            (
+                make_visible,
+            ),
+        )
+        .add_plugins((CameraPlugin, NodePlugin))
+        .run();
+}
 
-    'running: loop {
-        for event in winsdl.event_pump.poll_iter() {
-            match event {
-                Event::Quit { .. } => break 'running,
-                _ => { }
-            }
-        }
-
-        unsafe {
-            gl::ClearColor(0.3, 0.3, 0.3, 1.0);
-            gl::Clear(gl::COLOR_BUFFER_BIT);
-        }
-        
-        winsdl.window.gl_swap_window();
+fn make_visible(
+    mut window: Query<&mut Window>, 
+    frames: Res<FrameCount>
+) {
+    if frames.0 == 3 {
+        window.single_mut().visible = true;
     }
 }
+
