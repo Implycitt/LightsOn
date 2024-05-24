@@ -4,6 +4,8 @@ from functools import partial
 
 from PyQt5.Qt import *
 
+from plugins import nodes
+
 class MainWindow(QMainWindow):
     
     numberOfNodesSquared = 3
@@ -14,7 +16,7 @@ class MainWindow(QMainWindow):
         self.setUI()
 
     def buttonPress(self, row, col):
-        self.nodesGrid[row][col].setText("Pressed")
+        self.nodesGrid[row][col].updateState()
 
     def setUI(self):
         centralWidget = QWidget()
@@ -26,8 +28,8 @@ class MainWindow(QMainWindow):
             grid = []
             for col in range(self.numberOfNodesSquared):
 
-                buttonState = random.randint(0, 1);
-                button = QPushButton(f"{buttonState}")
+                button = nodes.Nodes()
+                button.setState()
 
                 grid.insert(col, button)
                 button.clicked.connect(partial(self.buttonPress, row, col))
