@@ -8,7 +8,7 @@ from plugins import Nodes
 
 class MainWindow(QMainWindow):
 
-    numberOfNodesSquared = 2
+    numberOfNodesSquared = 3 
     nodesGrid = []
     didWin = False
 
@@ -17,11 +17,12 @@ class MainWindow(QMainWindow):
 
         centralWidget = QWidget()
         self.setCentralWidget(centralWidget)
-        self.layout = QVBoxLayout(centralWidget)
+        self.layout = QGridLayout(centralWidget)
+        self.layout.setSpacing(0)
 
         self.setup()
         self.setFixedSize(QSize(800, 600))
-        self.setStyleSheet("background-color: black")
+        self.setStyleSheet("background-color: slategrey")
         self.setWindowTitle("Lights Out")
 
     def nodePress(self, row, col):
@@ -41,7 +42,6 @@ class MainWindow(QMainWindow):
             for col in range(self.numberOfNodesSquared):
 
                 button = Nodes.Nodes()
-                button.setState()
 
                 grid.insert(col, button)
                 button.clicked.connect(partial(self.nodePress, row, col))
@@ -81,12 +81,21 @@ class MainWindow(QMainWindow):
     def win(self):  
         self.clearScreen()
 
-        label = QLabel("You win!")
         replayButton = QPushButton(self)
+        replayButton.setText("Play Again")
+        replayButton.setStyleSheet("background-color: white")
+        replayButton.setMinimumSize(300, 50)
+        replayButton.setMaximumSize(300, 50)
+
+        label = QLabel("You win!")
+        label.setFont(QFont("Arial", 20))
+        label.setStyleSheet("color: white")
+        label.setMinimumSize(300, 50)
+        label.setMaximumSize(300, 50)
 
         label.setAlignment(Qt.AlignCenter)
-        self.layout.addWidget(label)
-        self.layout.addWidget(replayButton)
+        self.layout.addWidget(label, 0, 0)
+        self.layout.addWidget(replayButton, 1, 0)
         
         replayButton.clicked.connect(partial(self.setup))
 

@@ -9,6 +9,8 @@ class Nodes(QPushButton):
 
     def __init__(self):
         super().__init__()
+        self.setMinimumSize(100, 100)
+        self.setMaximumSize(100, 100)
         self.setState()
         self.changeColor()
 
@@ -24,7 +26,7 @@ class Nodes(QPushButton):
     def changeColor(self):
         self.resize(150, 150)
         if (self.state == 1):
-            self.setStyleSheet("background-color: green")
+            self.setStyleSheet("background-color: green; border: 2px solid white")
         else:
-            self.setStyleSheet("background-color: red")
+            self.setStyleSheet("background-color: red; border: 2px solid white")
 
