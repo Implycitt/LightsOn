@@ -1,7 +1,7 @@
 import sys
 from PyQt5.Qt import *
 
-from plugins import Nodes, Window
+from plugins import Nodes, Window, solve
 
 def createWindow():
     app = QApplication(sys.argv)

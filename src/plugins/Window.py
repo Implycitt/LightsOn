@@ -4,12 +4,13 @@ from functools import partial
 
 from PyQt5.Qt import *
 
-from plugins import Nodes
+from plugins import Nodes, solve
 
 class MainWindow(QMainWindow):
 
-    numberOfNodesSquared = 3 
+    numberOfNodesSquared = 4
     nodesGrid = []
+    solveMatrix = []
     didWin = False
 
     def __init__(self):
@@ -36,18 +37,25 @@ class MainWindow(QMainWindow):
         self.didWin = False
         self.clearScreen()
         self.nodesGrid = []
+        self.solveMatrix = []
 
+        i = 0
         for row in range(self.numberOfNodesSquared):
             grid = []
             for col in range(self.numberOfNodesSquared):
 
                 button = Nodes.Nodes()
+                state = button.state
 
                 grid.insert(col, button)
+                self.solveMatrix.insert(i, state)
+
                 button.clicked.connect(partial(self.nodePress, row, col))
                 self.layout.addWidget(button, row+1, col)
+                i += 1
 
             self.nodesGrid.insert(row, grid)
+        self.startSolve()
 
     def updateNeighbors(self, row, col):
         up = down = right = left = True 
@@ -99,6 +107,12 @@ class MainWindow(QMainWindow):
         
         replayButton.clicked.connect(partial(self.setup))
 
+    def startSolve(self):
+        s = solve.Solve()
+        s.setStartMatrix(self.solveMatrix)
+        s.setSize(self.numberOfNodesSquared)
+        s.getTransformations()
+        
     def clearScreen(self):
         for i in reversed(range(self.layout.count())): 
             self.layout.itemAt(i).widget().setParent(None)
