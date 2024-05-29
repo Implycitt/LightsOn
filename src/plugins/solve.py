@@ -42,28 +42,38 @@ class Solve:
                 retRow.insert(j, O)
                 Brow.insert(j, 0)
                 if (start == j):
-                    row.insert(j, 0)
-                else:
                     row.insert(j, 1)
+                else:
+                    row.insert(j, 0)
             start += 1
             ret.insert(i, retRow)
-            I.insert(i, row)
-            B.insert(i, Brow)
+            I.append(row)
+            B.append(Brow)
 
         while (x+1 < self.size):
-            B[x][y] = B[x+1][y] = B[x][y+1] = 1
+            B[x][y] = B[x+1][y] = B[x][y+1] = B[x+1][y+1] = 1
             x += 1
             y += 1
 
         x = 0
         y = 0
         while (x+1 < self.size):
-            ret[x][y] = B
+            ret[x][y] = ret[x+1][y+1] = B
             ret[x+1][y] = ret[x][y+1] = I
             x += 1
             y += 1
 
-        return sympy.Matrix(ret)
+        newRet = []
+        for x in range(self.size):
+            for y in range(self.size):
+                col = []
+                for z in range(self.size):
+                    col += ret[x][z][y]
+                newRet.append(col)
+
+        ret = sympy.Matrix(newRet)
+
+        return ret
 
     def getTransformations(self):
         self.setEndMatrix()

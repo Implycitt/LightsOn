@@ -8,7 +8,7 @@ from plugins import Nodes, solve
 
 class MainWindow(QMainWindow):
 
-    numberOfNodesSquared = 4
+    numberOfNodesSquared = 5 
     nodesGrid = []
     solveMatrix = []
     didWin = False
