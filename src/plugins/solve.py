@@ -10,7 +10,7 @@ class Solve:
     A = []
 
     def setStartMatrix(self, p):
-        self.p = numpy.array(p)
+        self.p = numpy.array([p])
 
     def setSize(self, s):
         self.size = s
@@ -80,10 +80,17 @@ class Solve:
 
         #construct transformation matrix
         self.A = self.constructTransform()
+        print(self.A)
 
-        #get modular inverse of the matrix
+        #self.p = sympy.Matrix(numpy.rot90(self.p, 3))
+
+        #self.A = sympy.Matrix(numpy.concatenate((self.A, self.p), axis=1))
+
+        #self.A = self.A.rref()[0] % 2
         self.A = self.A.inv_mod(2)
 
-        #obtain strategy x
-        x = numpy.dot(numpy.subtract(self.b, self.p), self.A) % 2
-        print("solution: ", x)
+        ans = sympy.Matrix(numpy.dot(numpy.subtract(self.b, self.p), self.A))%2
+        print(ans)
+
+        return ans
+

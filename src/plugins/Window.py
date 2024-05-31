@@ -1,4 +1,4 @@
-import sys, random
+import sys, random, math, numpy
 
 from functools import partial
 
@@ -8,7 +8,8 @@ from plugins import Nodes, solve
 
 class MainWindow(QMainWindow):
 
-    numberOfNodesSquared = 5 
+    numberOfNodesSquared = 2
+    clicks = 0
     nodesGrid = []
     solveMatrix = []
     didWin = False
@@ -19,6 +20,18 @@ class MainWindow(QMainWindow):
         centralWidget = QWidget()
         self.setCentralWidget(centralWidget)
         self.layout = QGridLayout(centralWidget)
+
+        side_layout = QGridLayout()
+        solveButton = QPushButton(self)
+        solveButton.setText("Solve")
+        solveButton.clicked.connect(partial(self.startSolve))
+        self.clicksLabel = QLabel(f"Clicks: {self.clicks}")
+        side_layout.addWidget(solveButton, 0, 0)
+        side_layout.addWidget(self.clicksLabel, 0, 1)
+
+        self.layout.addLayout(side_layout, 0, 1)
+
+        self.resize(640, 480)
         self.layout.setSpacing(0)
 
         self.setup()
@@ -27,6 +40,8 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Lights Out")
 
     def nodePress(self, row, col):
+        self.clicks += 1
+        self.clicksLabel.setText(f"Clicks: {self.clicks}")
         self.nodesGrid[row][col].updateState()
         self.updateNeighbors(row, col)
         self.getWin()
@@ -34,6 +49,7 @@ class MainWindow(QMainWindow):
             self.win()
 
     def setup(self):
+        self.clicks = 0
         self.didWin = False
         self.clearScreen()
         self.nodesGrid = []
@@ -46,6 +62,9 @@ class MainWindow(QMainWindow):
 
                 button = Nodes.Nodes()
                 state = button.state
+                button.setPosition(i)
+                button.setCol(col)
+                button.setRow(row)
 
                 grid.insert(col, button)
                 self.solveMatrix.insert(i, state)
@@ -55,7 +74,6 @@ class MainWindow(QMainWindow):
                 i += 1
 
             self.nodesGrid.insert(row, grid)
-        self.startSolve()
 
     def updateNeighbors(self, row, col):
         up = down = right = left = True 
@@ -111,8 +129,20 @@ class MainWindow(QMainWindow):
         s = solve.Solve()
         s.setStartMatrix(self.solveMatrix)
         s.setSize(self.numberOfNodesSquared)
-        s.getTransformations()
+        nodes = s.getTransformations()
+        self.solve(nodes)
+
+    def solve(self, nodes):
+        s = self.numberOfNodesSquared
+        for num, i in enumerate(nodes):
+            if i == 1:
+                print(num)
+                self.nodePress((math.ceil((num+1) / s))-1, num % (s+1))
+
         
     def clearScreen(self):
         for i in reversed(range(self.layout.count())): 
-            self.layout.itemAt(i).widget().setParent(None)
+            try:
+                self.layout.itemAt(i).widget().setParent(None)
+            except:
+                continue
