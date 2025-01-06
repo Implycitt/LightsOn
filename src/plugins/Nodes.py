@@ -54,3 +54,4 @@ class Nodes(QPushButton):
 
     def getClicks(self):
         return self.numberPresses
+

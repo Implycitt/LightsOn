@@ -4,15 +4,14 @@ from functools import partial
 
 from PyQt5.Qt import *
 
-from plugins import Nodes, solve
+from plugins import Nodes, Solve
 
 class MainWindow(QMainWindow):
 
-    numberOfNodesSquared = 2
+    numberOfNodesSquared = 3
     clicks = 0
     nodesGrid = []
     solveMatrix = []
-    didWin = False
 
     def __init__(self):
         super().__init__()
@@ -23,11 +22,13 @@ class MainWindow(QMainWindow):
 
         side_layout = QGridLayout()
         solveButton = QPushButton(self)
+        newButton = QPushButton(self)
+        newButton.setText("new")
         solveButton.setText("Solve")
-        solveButton.clicked.connect(partial(self.startSolve))
-        self.clicksLabel = QLabel(f"Clicks: {self.clicks}")
+        newButton.clicked.connect(partial(self.newGame))
+        solveButton.clicked.connect(partial(self.solveConfig))
         side_layout.addWidget(solveButton, 0, 0)
-        side_layout.addWidget(self.clicksLabel, 0, 1)
+        side_layout.addWidget(newButton, 0, 1)
 
         self.layout.addLayout(side_layout, 0, 1)
 
@@ -41,16 +42,11 @@ class MainWindow(QMainWindow):
 
     def nodePress(self, row, col):
         self.clicks += 1
-        self.clicksLabel.setText(f"Clicks: {self.clicks}")
         self.nodesGrid[row][col].updateState()
         self.updateNeighbors(row, col)
-        self.getWin()
-        if (self.didWin):
-            self.win()
 
     def setup(self):
         self.clicks = 0
-        self.didWin = False
         self.clearScreen()
         self.nodesGrid = []
         self.solveMatrix = []
@@ -95,54 +91,26 @@ class MainWindow(QMainWindow):
         if right:
             self.nodesGrid[row][col+1].updateState()
 
-    def getWin(self):
-        total = 0
-        for ar in self.nodesGrid:
-            for node in ar:
-                total += node.state
+    def solveConfig(self):
+        game = Solve.Solver(self.numberOfNodesSquared)
+        config = self.getSolveMatrix()
+        solution = game.solve(config)
+        print("The solution of\n{}\nis\n{}".format(config, solution))
+        for i in range(len(solution)):
+            for j in range(len(solution[0])):
+                if solution[i][j]:
+                    self.nodePress(i, j)
 
-        if (total == self.numberOfNodesSquared**2):
-            self.didWin = True
-
-    def win(self):  
-        self.clearScreen()
-
-        replayButton = QPushButton(self)
-        replayButton.setText("Play Again")
-        replayButton.setStyleSheet("background-color: white")
-        replayButton.setMinimumSize(300, 50)
-        replayButton.setMaximumSize(300, 50)
-
-        label = QLabel("You win!")
-        label.setFont(QFont("Arial", 20))
-        label.setStyleSheet("color: white")
-        label.setMinimumSize(300, 50)
-        label.setMaximumSize(300, 50)
-
-        label.setAlignment(Qt.AlignCenter)
-        self.layout.addWidget(label, 0, 0)
-        self.layout.addWidget(replayButton, 1, 0)
-        
-        replayButton.clicked.connect(partial(self.setup))
-
-    def startSolve(self):
-        s = solve.Solve()
-        s.setStartMatrix(self.solveMatrix)
-        s.setSize(self.numberOfNodesSquared)
-        nodes = s.getTransformations()
-        self.solve(nodes)
-
-    def solve(self, nodes):
-        s = self.numberOfNodesSquared
-        for num, i in enumerate(nodes):
-            if i == 1:
-                print(num)
-                self.nodePress((math.ceil((num+1) / s))-1, num % (s+1))
-
-        
     def clearScreen(self):
         for i in reversed(range(self.layout.count())): 
             try:
                 self.layout.itemAt(i).widget().setParent(None)
             except:
                 continue
+
+    def getSolveMatrix(self):
+        return numpy.array([[self.nodesGrid[j][i].state for i in range(self.numberOfNodesSquared)] for j in range(self.numberOfNodesSquared)])
+
+    def newGame(self):
+        self.clearScreen()
+        self.setup()
