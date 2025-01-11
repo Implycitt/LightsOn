@@ -8,7 +8,7 @@ from plugins import Nodes, Solve
 
 class MainWindow(QMainWindow):
 
-    numberOfNodesSquared = 3
+    numberOfNodesSquared = 5
     clicks = 0
     nodesGrid = []
     solveMatrix = []
