@@ -1,5 +1,4 @@
 <a id="readme-top"></a>
-[![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
@@ -8,13 +7,10 @@
 
 <h3 align="center">LightsOn</h3>
 
-  <p align="center">
+<p align="center">
     Puzzle game with linear algebra solver.
-    <br />
-    <a href="https://github.com/Implycitt/LightsOn/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
-    &middot;
-  </p>
-</div>
+  <br />
+</p>
 
 
 <!-- TABLE OF CONTENTS -->
@@ -34,6 +30,7 @@
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
+    <li><a href="#resources">Resources</a></li>
     <li><a href="#license">License</a></li>
   </ol>
 </details>
@@ -80,6 +77,16 @@ im just gonna talk about how it works also put some pictures and maybe add anoth
   cd src/
   python main.py 
   ```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- RESOURCES -->
+## Resources
+
+* [Physics for the birds](https://www.youtube.com/watch?v=0fHkKcy0x_U), video where I got the idea
+* [pmneila](https://github.com/pmneila/Lights-Out/blob/master/lightsout.py), provided python linear algebra functions
+* [MAA](https://people.sc.fsu.edu/~jburkardt/classes/imps_2017/11_28/2690705.pdf)
+* [Madsen Lights Out](https://cau.ac.kr/~mhhgtx/courses/LinearAlgebra/references/MadsenLightsOut.pdf)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
