@@ -39,7 +39,12 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-im just gonna talk about how it works also put some pictures and maybe add another section for screenshots or something
+LightsOn is my recreation of the Lights Out puzzle game with a linear algebra puzzle
+solver built into it. Lights Out is a puzzle game where you are given a square grid of n
+lights. Each light has an on or off state and when toggled also affects its direct neighbors
+(up, down, left and right). Turns out that this puzzle can be solved using linear algebra
+and that’s exactly what the project set out to do! The program creates different starting
+configurations and has a solve button that will automatically solve the puzzle
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
